@@ -10,12 +10,13 @@ class HeaderWidget extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 135,
+      height: !controller.validAccount.value ? 185 : 135,
       child: Padding(
         padding: const EdgeInsets.only(top: 18, left: 18, right: 18),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               'Endereço de e-mail',
@@ -94,7 +95,7 @@ class HeaderWidget extends GetView<HomeController> {
                 ],
               ),
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 12),
             Obx(
               () => Visibility(
                 visible: !controller.validAccount.value,

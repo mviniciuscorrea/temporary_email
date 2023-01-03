@@ -57,24 +57,10 @@ class AppBarWidget extends GetView<HomeController> {
                     ),
                   ),
                   IconButton(
-                      icon: const Icon(Icons.delete),
-                      color: Colors.white,
-                      onPressed: () {
-                        AlertDlg().confirm(
-                          title: 'Confirmar',
-                          body: 'Será excluído e-mails selecionados',
-                          context: context,
-                          cancelFunction: () {
-                            controller.selectedBottom.value = 0;
-                            Navigator.pop(context, 'Cancel');
-                          },
-                          confirmFunction: () {
-                            Navigator.pop(context, 'Ok');
-
-                            controller.deleteMessages();
-                          },
-                        );
-                      }),
+                    icon: const Icon(Icons.delete),
+                    color: Colors.white,
+                    onPressed: controller.messageDeleteEmails,
+                  )
                 ],
               ),
               automaticallyImplyLeading: true,

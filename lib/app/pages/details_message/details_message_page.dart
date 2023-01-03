@@ -1,9 +1,8 @@
 import 'package:email_temporario/app/pages/details_message/controller/details_message_controller.dart';
 import 'package:email_temporario/app/pages/details_message/widgets/header_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
-
-import '../../global/widgets/alert_dialog_widget.dart';
 
 class DetailsMessagePage extends GetView<DetailsMessageController> {
   const DetailsMessagePage({Key? key}) : super(key: key);
@@ -21,22 +20,7 @@ class DetailsMessagePage extends GetView<DetailsMessageController> {
             child: IconButton(
               icon: const Icon(Icons.delete),
               color: Colors.white,
-              onPressed: () {
-                // AlertDlg().confirm(
-                //   title: 'Confirmar',
-                //   body: 'Será excluído e-mails selecionados',
-                //   context: context,
-                //   cancelFunction: () {
-                //     controller.selectedBottom.value = 0;
-                //     Navigator.pop(context, 'Cancel');
-                //   },
-                //   confirmFunction: () {
-                //     Navigator.pop(context, 'Ok');
-
-                //     controller.deleteMessages();
-                //   },
-                // );
-              },
+              onPressed: controller.deleteMessage,
             ),
           ),
         ],
@@ -49,8 +33,13 @@ class DetailsMessagePage extends GetView<DetailsMessageController> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(18.0),
-        child: Column(
-          children: const [HeaderWidget()],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const HeaderWidget(),
+              HtmlWidget(controller.loadHtmlFromAssets())
+            ],
+          ),
         ),
       ),
     );

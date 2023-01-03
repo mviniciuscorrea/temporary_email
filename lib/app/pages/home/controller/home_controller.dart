@@ -37,13 +37,13 @@ class HomeController extends GetxController {
   RxInt totalMailsToDelete = 0.obs;
   RxList<messages.HydraMember> listEmails = <messages.HydraMember>[].obs;
 
+  bool disableTimer = true;
+
   @override
   void onReady() {
+    disableTimer = true;
     getDomains();
-
     super.onReady();
-
-    // timerGetNewEmail();
   }
 
   void createRandomEmail() {
@@ -52,6 +52,8 @@ class HomeController extends GetxController {
 
   void getDomains() async {
     LoadingWidget.showLoadingDialog(Get.context!);
+
+    listEmails.clear();
     await account.loadData();
 
     validAccount.value = account.isValidAccount();
@@ -69,7 +71,8 @@ class HomeController extends GetxController {
     } else {
       domainName.value = account.domain;
       emailController.text = account.address;
-      getAllMessages();
+
+      _timerGetNewEmail();
     }
 
     print(account.token);
@@ -79,7 +82,19 @@ class HomeController extends GetxController {
   }
 
   void createAccount() async {
+    disableTimer = true;
+
+    if (emailController.text.trim().isEmpty) {
+      return _alertDlg.alert(
+        title: 'Ooops',
+        body: 'Informe um e-mail para nós criarmos :)',
+        context: Get.context!,
+        confirmFunction: () => Navigator.pop(Get.context!, 'Ok'),
+      );
+    }
+
     LoadingWidget.showLoadingDialog(Get.context!);
+    listEmails.clear();
 
     // final address = '${emailController.text}${domainName.value}';
     // const pass = '123456';
@@ -94,6 +109,20 @@ class HomeController extends GetxController {
       final response = await _homeRepository.createToken();
       validAccount.value = response.isNotEmpty;
       LoadingWidget.closeDialog(Get.context!);
+
+      if (validAccount.value) {
+        _timerGetNewEmail();
+      } else {
+        account.removeDataAccount();
+
+        _alertDlg.alert(
+          title: 'Ooops',
+          body:
+              'Não foi possível gerar um token, crie novamente um novo e-mail',
+          context: Get.context!,
+          confirmFunction: () => Navigator.pop(Get.context!, 'Ok'),
+        );
+      }
     } else {
       await account.removeDataAccount();
       LoadingWidget.closeDialog(Get.context!);
@@ -114,17 +143,24 @@ class HomeController extends GetxController {
     final response = await _homeRepository.getAllMessages();
 
     if (response.isNotEmpty) {
-      //listEmails.clear();
-
       final modelAllMessages = messages.MessagesModel.fromJson(response);
 
-      for (var e in modelAllMessages.hydraMember) {
-        listEmails.add(e);
+      if (listEmails.isEmpty) {
+        listEmails.assignAll(
+          modelAllMessages.hydraMember.where((e) => !e.isDeleted),
+        );
+      } else {
+        for (var message in modelAllMessages.hydraMember) {
+          listEmails.firstWhere(
+              (element) => element.hydraMemberId == message.hydraMemberId,
+              orElse: () {
+            if (!message.isDeleted) {
+              listEmails.insert(0, message);
+            }
+            return message;
+          });
+        }
       }
-
-      // listEmails.assignAll(
-      //   modelAllMessages.hydraMember.where((e) => !e.isDeleted),
-      // );
 
       update(['ListViewMail']);
 
@@ -146,6 +182,8 @@ class HomeController extends GetxController {
   }
 
   showMessageDetails(messages.HydraMember showDetailsMessage) async {
+    disableTimer = true;
+
     final response = await _homeRepository.getMessage(
       idMessage: showDetailsMessage.hydraMemberId,
     );
@@ -164,8 +202,12 @@ class HomeController extends GetxController {
       Get.toNamed(
         Routes.detailsMessage,
         arguments: [message],
+      )?.then(
+        (_) => _timerGetNewEmail(),
       );
     } else {
+      _timerGetNewEmail();
+
       _alertDlg.alert(
         title: 'Ooops',
         body: 'Não foi possível carregar o email. Tente novamente mais tarde',
@@ -175,7 +217,28 @@ class HomeController extends GetxController {
     }
   }
 
+  messageDeleteEmails() {
+    disableTimer = true;
+
+    _alertDlg.confirm(
+      title: 'Confirmar',
+      body: 'Será excluído e-mails selecionados',
+      context: Get.context!,
+      cancelFunction: () {
+        selectedBottom.value = 0;
+        Navigator.pop(Get.context!, 'Cancel');
+        _timerGetNewEmail();
+      },
+      confirmFunction: () {
+        Navigator.pop(Get.context!, 'Ok');
+
+        _deleteMessages();
+      },
+    );
+  }
+
   Future<bool> removeAndCreateNewAccount() async {
+    disableTimer = true;
     LoadingWidget.showLoadingDialog(Get.context!);
 
     final response = await _homeRepository.deleteAccount();
@@ -200,6 +263,7 @@ class HomeController extends GetxController {
   }
 
   void callSelectMailToDelete(int index) {
+    disableTimer = true;
     listEmails[index].selected = !listEmails[index].selected;
 
     if (listEmails[index].selected) {
@@ -209,24 +273,40 @@ class HomeController extends GetxController {
     }
 
     update(['ListViewMail']);
+    _timerGetNewEmail();
   }
 
   void clearListMailToDelete() {
+    disableTimer = true;
+
     for (var i = 0; i < listEmails.length; i++) {
       listEmails[i].selected = false;
     }
 
     totalMailsToDelete.value = 0;
     update(['ListViewMail']);
+    _timerGetNewEmail();
   }
 
-  void deleteMessages() {
+  void _deleteMessages() async {
     LoadingWidget.showLoadingDialog(Get.context!);
 
-    for (var i = 0; i < listEmails.length; i++) {
-      if (listEmails[i].selected) {
-        _homeRepository.deleteMessage(idMessage: listEmails[i].hydraMemberId);
-        listEmails.removeAt(i);
+    List<messages.HydraMember> emails = [];
+    emails.assignAll(listEmails.where((e) => e.selected));
+
+    for (var email in emails) {
+      int response = await _homeRepository.deleteMessage(
+        idMessage: email.hydraMemberId,
+      );
+
+      if (response == 204) {
+        final index = listEmails.indexWhere(
+          (element) => element.hydraMemberId == email.hydraMemberId,
+        );
+
+        if (index >= 0) {
+          listEmails.removeAt(index);
+        }
       }
     }
 
@@ -234,11 +314,18 @@ class HomeController extends GetxController {
     update(['ListViewMail']);
 
     LoadingWidget.closeDialog(Get.context!);
+    _timerGetNewEmail();
   }
 
   void _timerGetNewEmail() {
-    Timer.periodic(const Duration(seconds: 5), (_) {
+    disableTimer = false;
+
+    Timer.periodic(const Duration(seconds: 5), (timer) {
       getAllMessages(showLoading: false);
+
+      if (disableTimer) {
+        timer.cancel();
+      }
     });
   }
 }

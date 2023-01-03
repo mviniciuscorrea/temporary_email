@@ -51,7 +51,7 @@ class HomeRepository {
     if (account.address.isNotEmpty && account.pass.isNotEmpty) {
       final response = await _dataEmail.createToken(
         account: AccountBase(
-          address: account.address,
+          address: '${account.address}${account.domain}',
           password: account.pass,
         ),
       );
