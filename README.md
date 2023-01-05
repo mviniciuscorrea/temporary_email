@@ -1,4 +1,6 @@
-# Mail Temp ✉ 📬
+# Mail Temp
+
+![icon (1)](https://user-images.githubusercontent.com/37540504/210810224-5cb0e3c4-014c-4c01-9d4f-a4af6c945dc5.png)
 
 **Protect your personal email address from spam, bots, phishing and other online abuse. Temporary anonymous email address - no commitments and no risks.**
 
