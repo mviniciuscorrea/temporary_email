@@ -1,16 +1,21 @@
-# email_temporario
+# Mail Temp ✉ 📬
 
-A new Flutter project.
+**Protect your personal email address from spam, bots, phishing and other online abuse. Temporary anonymous email address - no commitments and no risks.**
 
-## Getting Started
+- ✅ Create a new account by using our domain names.
+- ✅ Sign up only on sites that you have acquired permission to.
+- ✅ The site sends an email message to the address you specify.
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+- ❗Does not require registration
+- ❗It is completely anonymous: personal data, address itself and emails are deleted after you delete the account
+- ❗Messages are delivered instantly
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+![WhatsApp Image 2023-01-05 at 11 52 20](https://user-images.githubusercontent.com/37540504/210809251-19934b89-b31b-4448-ab54-e9e67942cea7.jpeg)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+![ezgif com-gif-maker](https://user-images.githubusercontent.com/37540504/210806351-e0b1c517-95fc-49c4-8647-4383c277e100.gif)
+
+![ezgif com-gif-maker (2)](https://user-images.githubusercontent.com/37540504/210807552-335ae3ec-dd9c-425f-9e58-03d3f006390c.gif)
+
+
