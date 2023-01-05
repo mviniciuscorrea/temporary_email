@@ -9,8 +9,6 @@ import '../../../global/models/account.dart';
 class HomeRepository {
   final _dataEmail = DataEmail();
   AccountData account = Get.find();
-  // final token =
-  //     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzEzNjY3MTAsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6Im1hcmN1c0BuaWdodG9yYi5jb20iLCJpZCI6IjYzOWYwNzkyMWU3MzE5MTBhZDEzZGQyNCIsIm1lcmN1cmUiOnsic3Vic2NyaWJlIjpbIi9hY2NvdW50cy82MzlmMDc5MjFlNzMxOTEwYWQxM2RkMjQiXX19.wESMqKK6g745RuDXbcMqY_ihOmAuPyyVmEwSfeLnSWosWvFOIaEP9owynRykaxs_kf77GmddBq4YoIdkBFylZA';
 
   Future<Map<String, dynamic>> getDomains() async {
     final response = await _dataEmail.getDomains();
@@ -39,6 +37,7 @@ class HomeRepository {
       await account.setData(key: "pass", value: pass);
       await account.setData(key: "domain", value: domain);
 
+      await account.loadData();
       return json.decode(response.body);
     } else {
       return {};
@@ -46,8 +45,6 @@ class HomeRepository {
   }
 
   Future<Map<String, dynamic>> createToken() async {
-    await account.loadData();
-
     if (account.address.isNotEmpty && account.pass.isNotEmpty) {
       final response = await _dataEmail.createToken(
         account: AccountBase(
@@ -62,6 +59,7 @@ class HomeRepository {
 
         await account.setData(key: "token", value: tokenModel.token);
         await account.setData(key: "id", value: tokenModel.id);
+        await account.loadData();
 
         return j;
       } else {
@@ -103,5 +101,14 @@ class HomeRepository {
     );
 
     return response.statusCode == 200 ? json.decode(response.body) : {};
+  }
+
+  Future<int> setReadMessage({required String idMessage}) async {
+    final response = await _dataEmail.setReadMessage(
+      idMessage: idMessage,
+      token: account.token,
+    );
+
+    return response.statusCode;
   }
 }

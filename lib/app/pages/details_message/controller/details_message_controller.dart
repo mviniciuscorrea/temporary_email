@@ -8,21 +8,33 @@ import '../../../styles/style.dart';
 import '../../home/repository/home_repository.dart';
 
 class DetailsMessageController extends GetxController {
-  DetailsMessageController();
+  DetailsMessageController({
+    required HomeRepository homeRepository,
+  }) : _homeRepository = homeRepository;
 
+  final HomeRepository _homeRepository;
   final style = Style();
-  final _helper = Helper();
+  final helper = Helper();
 
   late MessageBase message;
 
   RxBool favorite = false.obs;
+  bool seenEmail = false;
 
   @override
   void onInit() async {
     try {
       message = MessageBase.fromJson(Get.arguments[0] ?? {});
+      seenEmail = message.message.seen;
+
+      if (!seenEmail) {
+        seenEmail = _homeRepository.setReadMessage(
+              idMessage: message.message.messageDetailsId,
+            ) ==
+            200;
+      }
     } catch (_) {
-      Get.back();
+      Get.back(result: seenEmail);
     }
 
     super.onInit();
@@ -32,12 +44,14 @@ class DetailsMessageController extends GetxController {
     favorite.value = !favorite.value;
   }
 
-  String formatDate(DateTime date) {
-    return _helper.dateFormat(date);
-  }
-
   String loadHtmlFromAssets() {
     return message.message.html[0];
+  }
+
+  void backToHome() {
+    Get.back(
+      result: {"seenEmail": true, "deleteEmail": false},
+    );
   }
 
   void deleteMessage() {
@@ -52,14 +66,12 @@ class DetailsMessageController extends GetxController {
         Navigator.pop(Get.context!, 'Ok');
         LoadingWidget.showLoadingDialog(Get.context!);
 
-        final homeRepository = HomeRepository();
-
-        await homeRepository.deleteMessage(
+        await _homeRepository.deleteMessage(
           idMessage: message.message.messageDetailsId,
         );
 
         LoadingWidget.closeDialog(Get.context!);
-        Get.back();
+        Get.back(result: {"seenEmail": seenEmail, "deleteEmail": true});
       },
     );
   }

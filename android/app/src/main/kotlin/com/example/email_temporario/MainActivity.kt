@@ -1,4 +1,4 @@
-package com.example.email_temporario
+package br.com.mailtemp
 
 import io.flutter.embedding.android.FlutterActivity
 

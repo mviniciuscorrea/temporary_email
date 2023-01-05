@@ -31,7 +31,7 @@ class _ActionButtonWidget extends State<ActionButtonWidget> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: widget.height,
-      width: Get.width,
+      width: double.infinity,
       child: ElevatedButton(
         onPressed: (widget.function != null) ? () => widget.function!() : null,
         style: ElevatedButton.styleFrom(

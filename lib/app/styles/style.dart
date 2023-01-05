@@ -28,4 +28,12 @@ class Style {
   BorderRadius borderInput() {
     return BorderRadius.circular(20.0);
   }
+
+  Color unreadEmailBackground() {
+    return Color(0xFFF2F6FC);
+  }
+
+  Color selectEmailBackground() {
+    return Color(0xFFC2DBFF);
+  }
 }

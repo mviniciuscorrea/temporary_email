@@ -9,103 +9,103 @@ class HeaderWidget extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: !controller.validAccount.value ? 185 : 135,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 18, left: 18, right: 18),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Endereço de e-mail',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: controller.style.textColor(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: controller.style.borderColor(),
-                  width: 2.0,
+    return Obx(
+      () => SizedBox(
+        height: !controller.validAccount.value ? 185 : 135,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 18, left: 18, right: 18),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Endereço de e-mail',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: controller.style.textColor(),
                 ),
-                borderRadius: BorderRadius.circular(20),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Flexible(
-                    flex: 8,
-                    child: Obx(
-                      () => TextField(
-                        enabled: !controller.validAccount.value,
-                        controller: controller.emailController,
-                        keyboardType: TextInputType.text,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: controller.style.textColor(),
-                        ),
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                            borderSide: BorderSide.none,
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: controller.style.borderColor(),
+                    width: 2.0,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Flexible(
+                      flex: 8,
+                      child: Obx(
+                        () => TextField(
+                          enabled: !controller.validAccount.value,
+                          controller: controller.emailController,
+                          keyboardType: TextInputType.text,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: controller.style.textColor(),
                           ),
-                          hintText: 'e-mail',
-                          prefixIcon: Padding(
-                            padding: const EdgeInsets.only(left: 12),
-                            child: Icon(
-                              Icons.email,
-                              color: controller.style.borderColor(),
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                            ),
+                            hintText: 'e-mail',
+                            prefixIcon: Padding(
+                              padding: const EdgeInsets.only(left: 12),
+                              child: Icon(
+                                Icons.email,
+                                color: controller.style.borderColor(),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 2),
-                  Flexible(
-                    flex: 4,
-                    child: Obx(() => Text(
-                          controller.domainName.value,
-                          style: TextStyle(
-                            color: controller.style.textColor(),
-                          ),
-                        )),
-                  ),
-                  Obx(
-                    () => IconButton(
-                      onPressed: controller.validAccount.value
-                          ? () {
-                              controller.copyToClipboard();
-                              Get.snackbar(
-                                  'Copiado', "Endereço de e-mail copiado");
-                            }
-                          : () => controller.createRandomEmail(),
-                      icon: Icon(
-                        controller.validAccount.value
-                            ? Icons.copy
-                            : Icons.refresh,
-                        color: controller.style.colorPrimary(),
+                    const SizedBox(width: 2),
+                    Flexible(
+                      flex: 4,
+                      child: Obx(() => Text(
+                            controller.domainName.value,
+                            style: TextStyle(
+                              color: controller.style.textColor(),
+                            ),
+                          )),
+                    ),
+                    Obx(
+                      () => IconButton(
+                        onPressed: controller.validAccount.value
+                            ? () {
+                                controller.copyToClipboard();
+                              }
+                            : () => controller.createRandomEmail(),
+                        icon: Icon(
+                          controller.validAccount.value
+                              ? Icons.copy
+                              : Icons.refresh,
+                          color: controller.style.colorPrimary(),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            Obx(
-              () => Visibility(
-                visible: !controller.validAccount.value,
-                child: ActionButtonWidget(
-                  title: 'Criar e-mail',
-                  function: controller.createAccount,
+                  ],
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 12),
+              Obx(
+                () => Visibility(
+                  visible: !controller.validAccount.value,
+                  child: ActionButtonWidget(
+                    title: 'Criar e-mail',
+                    function: controller.createAccount,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

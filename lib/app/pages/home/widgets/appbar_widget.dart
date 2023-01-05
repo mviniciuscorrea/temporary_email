@@ -13,7 +13,7 @@ class AppBarWidget extends GetView<HomeController> {
           ? AppBar(
               elevation: 0.4,
               title: Text(
-                'Email Temporário',
+                'Mail Temp',
                 style: TextStyle(
                   color: controller.style.textWhiteColor(),
                   fontWeight: FontWeight.w500,
@@ -30,11 +30,11 @@ class AppBarWidget extends GetView<HomeController> {
                     color: controller.style.textWhiteColor(),
                   ),
                   onPressed: () => AlertDlg().alert(
-                    title: 'Email Temporário',
+                    title: 'Mail Temp?',
                     body:
-                        'É um endereço de e-mail temporário e completamente anónimo que não requer nenhum registro.'
+                        'É um endereço de e-mail temporário e completamente anônimo que não requer nenhum registro.'
                         '\n \nSua conta de e-mail é válida até que você a exclua manualmente ('
-                        'os dados pessoais, o endereço em si e os e-mails são eliminados depois de eliminar a conta).'
+                        'o endereço em si e os e-mails são eliminados depois de eliminar a conta).'
                         '\n \nArmazenamos mensagens por apenas 7 dias. Desculpe-nos, não podemos armazená-los indefinidamente.',
                     context: context,
                     confirmFunction: () => Navigator.pop(Get.context!, 'Ok'),

@@ -81,4 +81,18 @@ class DataEmail {
 
     return response;
   }
+
+  Future<http.Response> setReadMessage({
+    required String idMessage,
+    required String token,
+  }) async {
+    _api.headers.addAll({'Authorization': 'Bearer $token'});
+
+    final response = await http.patch(
+      Uri.parse('${_api.urlApiEmailBase}/messages/$idMessage'),
+      headers: _api.headers,
+    );
+
+    return response;
+  }
 }

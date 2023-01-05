@@ -27,7 +27,7 @@ class DetailsMessagePage extends GetView<DetailsMessageController> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           color: Colors.white,
-          onPressed: Get.back,
+          onPressed: controller.backToHome,
         ),
         backgroundColor: controller.style.colorPrimary(),
       ),
@@ -37,7 +37,12 @@ class DetailsMessagePage extends GetView<DetailsMessageController> {
           child: Column(
             children: [
               const HeaderWidget(),
-              HtmlWidget(controller.loadHtmlFromAssets())
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: HtmlWidget(
+                  controller.loadHtmlFromAssets(),
+                ),
+              ),
             ],
           ),
         ),

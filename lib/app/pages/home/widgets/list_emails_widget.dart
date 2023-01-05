@@ -27,8 +27,10 @@ class ListEmailsWidget extends StatelessWidget {
                           controller.listEmails[index],
                         ),
                   tileColor: controller.listEmails[index].selected
-                      ? Colors.grey[300]
-                      : Colors.transparent,
+                      ? controller.style.selectEmailBackground()
+                      : controller.listEmails[index].seen
+                          ? Colors.transparent
+                          : controller.style.unreadEmailBackground(),
                   leading: CircleAvatar(
                     radius: 24,
                     backgroundColor: controller.listEmails[index].colorAvatar,
@@ -57,19 +59,23 @@ class ListEmailsWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: controller.listEmails[index].seen
+                                ? FontWeight.w400
+                                : FontWeight.w800,
                             color: controller.style.textColor(),
                           ),
                         ),
                       ),
                       Flexible(
                         child: Text(
-                          controller.formatDate(
+                          controller.helper.dateFormat(
                             controller.listEmails[index].createdAt,
                           ),
                           style: TextStyle(
                             fontSize: 10,
-                            color: Colors.grey[400],
+                            color: controller.listEmails[index].seen
+                                ? Colors.grey[400]
+                                : Colors.black87,
                           ),
                         ),
                       ),
@@ -78,6 +84,12 @@ class ListEmailsWidget extends StatelessWidget {
                   subtitle: Text(
                     controller.listEmails[index].subject,
                     overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: controller.style.textColor(),
+                      fontWeight: controller.listEmails[index].seen
+                          ? FontWeight.w300
+                          : FontWeight.w500,
+                    ),
                   ),
                 );
               },

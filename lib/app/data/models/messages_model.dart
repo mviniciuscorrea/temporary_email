@@ -75,7 +75,7 @@ class HydraMember {
   final List<From> to;
   final String subject;
   final String intro;
-  final bool seen;
+  bool seen;
   final bool isDeleted;
   final bool hasAttachments;
   final int size;

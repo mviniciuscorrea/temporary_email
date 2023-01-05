@@ -11,8 +11,11 @@ class LoadingWidget {
           child: const SimpleDialog(
             backgroundColor: Colors.black54,
             children: [
-              Center(
-                child: CircularProgressIndicator(),
+              Padding(
+                padding: EdgeInsets.all(25),
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
               )
             ],
           ),

@@ -90,7 +90,7 @@ class HeaderWidget extends GetView<DetailsMessageController> {
               ),
               Flexible(
                 child: Text(
-                  controller.formatDate(
+                  controller.helper.dateFormat(
                     controller.message.message.createdAt,
                   ),
                   style: TextStyle(
